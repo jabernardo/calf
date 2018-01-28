@@ -6,7 +6,7 @@ namespace Calf\HTTP;
  * Response Class
  * 
  * @reference   https://github.com/jabernardo/lollipop-php/blob/master/Library/HTTP/Response.php
- * @version     1.1
+ * @version     1.2
  * @author      John Aldrich Bernardo <4ldrich@protonmail.com>
  * 
  */
@@ -126,7 +126,7 @@ class Response
      * @return  object
      * 
      */
-    public function cookies(array $data) {
+    public function setCookie(array $data) {
         $this->_cookies = array_merge_recursive($this->_cookies, $data);
         
         return  $this;

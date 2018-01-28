@@ -48,6 +48,14 @@ php -S localhost:8888 index.php
 
 ```
 
+## Testing
+
+```sh
+
+phpunit
+
+```
+
 ## License
 
 The `calf` is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).

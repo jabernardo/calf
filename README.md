@@ -56,6 +56,10 @@ phpunit
 
 ```
 
+## Learn more
+
+Please see the project's wiki page [here](https://github.com/jabernardo/calf/wiki).
+
 ## License
 
 The `calf` is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).

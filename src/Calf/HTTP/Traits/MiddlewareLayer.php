@@ -86,7 +86,9 @@ trait MiddlewareLayer
         
         // Just want to make sure that processed response from middlewares
         // are instance of \Calf\HTTP\Response
-        if (!($new_response instanceof \Calf\HTTP\Response)) {
+        if ($new_response instanceof \Calf\HTTP\Response) {
+            $res = $new_response;
+        } else {
             $res->set($new_response);
         }
 

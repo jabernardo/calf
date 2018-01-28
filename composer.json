@@ -1,0 +1,28 @@
+{
+    "name": "jabernardo/calf",
+    "type": "library",
+    "description": "A slim router for PHP Web Applications",
+    "keywords": ["router","library","php-router"],
+    "homepage": "https://github.com/jabernardo/calf",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "John Aldrich Bernardo",
+            "email": "4ldrich@protonmail.com",
+            "homepage": "https://jabernardo.github.io",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Calf\\": "src/Calf/"
+        }
+    }
+}

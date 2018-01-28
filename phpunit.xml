@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true" bootstrap="./src/autoload.php">
+    <testsuite name="Calf Test Suite">
+        <directory>./test/</directory>
+    </testsuite>
+</phpunit>

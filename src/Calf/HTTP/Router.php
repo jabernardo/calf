@@ -30,6 +30,12 @@ class Router
     private $_response = null;
     
     /**
+     * @var     array   All router level middlewares
+     * 
+     */
+    private $_middlewares = [];
+
+    /**
      * Class construct
      * 
      * @access  public
@@ -89,6 +95,18 @@ class Router
         }
     }
     
+    /**
+     * Add a new router-level middleware
+     * 
+     * @access  public
+     * @param   callable    $middleware Middleware to be added
+     * @return  void
+     * 
+     */
+    public function addMiddleware(callable $middleware) {
+        $this->_middlewares[] = $middleware;
+    }
+
     /**
      * Remove Route
      * 
@@ -198,6 +216,11 @@ class Router
         // Make sure that active route is an instance of \Calf\HTTP\Route
         if (!($active instanceof \Calf\HTTP\Route)) {
             throw new \Calf\Exception\Runtime('Didn\'t fetch a valid route.');
+        }
+
+        // Register the router-level middlewares
+        foreach ($this->_middlewares as $middleware) {
+            $active->addMiddleware($middleware);
         }
 
         // Execute Route

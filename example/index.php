@@ -14,7 +14,7 @@ $router = new Router();
 
 // Then create a new Route
 $home = new Route('/', function(Request $req, Response $res, array $args) {
-    return $res->set('Hello World');
+    return $res->set($res->get() . 'Hello World');
 });
 
 // For some reason, you might need to use middlewares...
@@ -52,6 +52,24 @@ $productsGroup->add(
 
 // Add group to router
 $router->addGroup($productsGroup);
+
+// After all, you need some high-level control on all routes using middleware
+// here are some samples of middleware in router-level
+// NOTE: Enabling codes below will affect code samples for 
+//      -   /products/get
+//      -   /products/get/fruits
+
+// $router->addMiddleware(function(Request $req, Response $res, callable $next) {
+//     $res->set($res->get() . 'Message: ');
+//     $next($req, $res);
+//     return $res;
+// });
+
+// $router->addMiddleware(function(Request $req, Response $res, callable $next) {
+//     $next($req, $res);
+//     $res->set($res->get() . '!!');
+//     return $res;
+// });
 
 // Then let the Router do its work.
 $router->dispatch();

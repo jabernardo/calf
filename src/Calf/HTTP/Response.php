@@ -109,7 +109,7 @@ class Response
      * 
      * @access  public
      * @param   mixed   $data   Response data
-     * @return  void
+     * @return  object
      * 
      * @throws  \Calf\Exception\InvalidArgument Data type mismatched for response data
      * 
@@ -131,6 +131,8 @@ class Response
         } else {
             throw new \Calf\Exception\InvalidArgument('Data type mismatched.');
         }
+
+        return $this;
     }
     
     /**

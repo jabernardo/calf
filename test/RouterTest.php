@@ -105,6 +105,31 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Hello World!', $output);
     }
     
+    public function testDispatchWrite() {
+        $_SERVER = [];
+        $_SERVER['REQUEST_URI'] = '/';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER["SCRIPT_NAME"] = '/index.php';
+        
+        $router = new \Calf\HTTP\Router();
+        
+        $home = new \Calf\HTTP\Route('/', function($req, $res) {
+            $res->write('Hello World');
+            $res->write('!');
+            
+            return $res;
+        });
+        
+        $router->add($home);
+        
+        ob_start();
+        $router->dispatch();
+        $output = ob_get_contents();
+        ob_end_clean();
+        
+        $this->assertEquals('Hello World!', $output);
+    }
+
     public function testDispatchMiddleware() {
         $_SERVER = [];
         $_SERVER['REQUEST_URI'] = '/';

@@ -5,7 +5,7 @@ namespace Calf\HTTP;
 /**
  * Response Class
  * 
- * @reference   https://github.com/jabernardo/lollipop-php/blob/master/Library/HTTP/Response.php
+ * @link        https://github.com/jabernardo/lollipop-php/blob/master/Library/HTTP/Response.php
  * @version     1.2
  * @author      John Aldrich Bernardo <4ldrich@protonmail.com>
  * 
@@ -31,7 +31,7 @@ class Response
      * @access  private
      * 
      */
-    private $_data = '';
+    private $_data = null;
     
     /**
      * @var     bool    Compress output using gzip
@@ -47,7 +47,7 @@ class Response
      * @return  object
      * 
      */
-    function __construct($data = '') {
+    function __construct($data = null) {
         $this->_data = $data;
         
         return $this;
@@ -102,6 +102,35 @@ class Response
         $this->_data = $data;
         
         return $this;
+    }
+
+    /**
+     * Write response data
+     * 
+     * @access  public
+     * @param   mixed   $data   Response data
+     * @return  void
+     * 
+     * @throws  \Calf\Exception\InvalidArgument Data type mismatched for response data
+     * 
+     */
+    public function write($data) {
+        if ((is_null($this->_data) || is_string($this->_data)) && is_string($data)) {
+            if (is_null($this->_data)) {
+                $this->_data = '';
+            }
+
+            $this->_data .= $data;
+        } else if ((is_null($this->_data) || is_array($this->_data) || is_object($this->_data)) && 
+            (is_array($data) || is_object($data))) {
+            if (is_null($this->_data)) {
+                $this->_data = [];
+            }
+            
+            $this->_data = array_merge_recursive((array)$this->_data, (array)$data);
+        } else {
+            throw new \Calf\Exception\InvalidArgument('Data type mismatched.');
+        }
     }
     
     /**

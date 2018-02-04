@@ -14,7 +14,7 @@ $router = new Router();
 
 // Then create a new Route
 $home = new Route('/', function(Request $req, Response $res, array $args) {
-    return $res->set($res->get() . 'Hello World');
+    return $res->write('Hello World');
 });
 
 // For some reason, you might need to use middlewares...
@@ -26,7 +26,7 @@ $home->addMiddleware(function(Request $req, Response $res, callable $next) {
     $next($req, $res);
 
     // After route is executed.
-    $res->set($res->get() . '!');
+    $res->write('!');
 
     return $res;
 });
@@ -40,13 +40,13 @@ $productsGroup = new RouteGroup('products');
 
 $productsGroup->add(
     new Route('get', function(Request $req, Response $res, array $args) {
-        return $res->set(['Pen', 'Pineapple', 'Apple']);
+        return $res->write(['Pen', 'Pineapple', 'Apple']);
     })
 );
 
 $productsGroup->add(
     new Route('get/fruits', function(Request $req, Response $res, array $args) {
-        return $res->set(['Pineapple', 'Apple']);
+        return $res->write(['Pineapple', 'Apple']);
     })
 );
 

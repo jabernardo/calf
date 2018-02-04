@@ -5,7 +5,7 @@ namespace Calf\HTTP;
 /**
  * Request Class
  * 
- * @reference   https://github.com/jabernardo/lollipop-php/blob/master/Library/HTTP/Request.php
+ * @link        https://github.com/jabernardo/lollipop-php/blob/master/Library/HTTP/Request.php
  * @version     1.0
  * @author      John Aldrich Bernardo <4ldrich@protonmail.com>
  * 

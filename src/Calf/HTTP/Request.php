@@ -20,6 +20,20 @@ class Request
     private $_all_requests = [];
     
     /**
+     * Class construct
+     * 
+     * @access  public
+     * @return  void
+     * 
+     */
+    public function __construct() {
+        // Get other request method from php://input
+        parse_str(file_get_contents("php://input"), $_php_request);
+        // then merge with POST and GET
+        $this->_all_requests = array_merge($this->_all_requests, array_merge($_REQUEST, $_php_request));
+    }
+
+    /**
      * Check for request(s)
      *
      * @param   mixed   $requests   Request names
@@ -29,11 +43,6 @@ class Request
      */
     function is($requests) {
         $is = true;
-        
-        // Also support PUT and DELETE
-        parse_str(file_get_contents("php://input"), $_php_request);
-        // Merge with POST and GET
-        $this->_all_requests = array_merge($this->_all_requests, array_merge($_REQUEST, $_php_request));
         
         if (is_array($requests)) {
             $returns = [];
@@ -76,11 +85,6 @@ class Request
      */
     function get($requests = null) {
         $var = [];
-        
-        // Also support PUT and DELETE
-        parse_str(file_get_contents("php://input"), $_php_request);
-        // Merge with POST and GET
-        $this->_all_requests = array_merge($this->_all_requests, array_merge($_REQUEST, $_php_request));
         
         if (is_array($requests)) {
             foreach ($requests as $request) {

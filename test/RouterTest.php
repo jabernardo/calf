@@ -77,7 +77,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         try {
             $router->remove(12321);
         } catch (\Calf\Exception\InvalidArgument $ex) {
-            $this->assertEquals($ex->getCode(), 100);
+            $this->assertEquals($ex->getCode(), 101);
         }
         
         $this->assertTrue($router->exists($home));

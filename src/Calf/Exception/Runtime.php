@@ -3,7 +3,7 @@
 namespace Calf\Exception;
 
 /**
- * Error 101: Runtime Exception
+ * Error 100: Runtime Exception
  * 
  * @version 1.0
  * @author John Aldrich Bernardo <4ldrich@protonmail.com>
@@ -12,7 +12,7 @@ namespace Calf\Exception;
 class Runtime extends \Exception
 {
     // Redefine the exception so message isn't optional
-    public function __construct($message, $code = 101, Exception $previous = null) {
+    public function __construct($message, $code = 100, Exception $previous = null) {
         // make sure everything is assigned properly
         parent::__construct($message, $code, $previous);
     }

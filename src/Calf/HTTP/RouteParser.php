@@ -49,11 +49,7 @@ class RouteParser
      * 
      */
     function __construct($path) {
-        // Trimming will kill our index
-        // so we'll be making sure that our index key is as-is
-        $this->_path = $path === '/' ? 
-            $path : 
-            trim($path, '/');
+        $this->_path = trim($path, '/');
     }
     
     /**

@@ -71,7 +71,7 @@ class Route
             throw new \Calf\Exception\InvalidArgument('Invalid callback.');
         }
         
-        $this->_path = $path;
+        $this->_path = trim($path, '/');
         $this->_callback = $callback;
         $this->_method = $method;
     }
@@ -152,7 +152,7 @@ class Route
      * 
      */
     public function setPath($path) {
-        $this->_path = $path;
+        $this->_path = trim($path, '/');
         
         return $this;
     }

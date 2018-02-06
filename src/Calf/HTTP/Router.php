@@ -57,18 +57,12 @@ class Router
      * 
      * @return  void
      * 
-     * @throws  \Calf\Exception\Router\EmptyPath      If route's path is empty
      * @throws  \Calf\Exception\Router\DuplicatedPath Duplicated path
      * 
      */
     public function add(\Calf\HTTP\Route $route) {
         // For php 5.4 compatibility
         $path = $route->getPath();
-        
-        // Check for empty path
-        if (empty($path)) {
-            throw new \Calf\Exception\Router\EmptyPath('Do you mean "/"?');
-        }
         
         // Check for duplicated routes
         if (isset($this->_routes[$path])) {
@@ -123,7 +117,7 @@ class Router
         if (is_object($path) && $path instanceof \Calf\HTTP\Route) {
             $route = $path->getPath();
         } else if (is_string($path)) {
-            $route = $path;
+            $route = trim($path, '/');
         } else {
             throw new \Calf\Exception\InvalidArgument('Invalid route');
         }
@@ -152,7 +146,7 @@ class Router
         if (is_object($path) && $path instanceof \Calf\HTTP\Route) {
             $route = $path->getPath();
         } else if (is_string($path)) {
-            $route = $path;
+            $route = trim($path, '/');
         } else {
             throw new \Calf\Exception\InvalidArgument('Invalid route');
         }

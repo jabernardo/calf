@@ -178,7 +178,7 @@ class Router
         }
         
         // Get URL path
-        $url = trim(parse_url($this->_request->getURL(), PHP_URL_PATH), '/');
+        $url = parse_url($this->_request->getURL(), PHP_URL_PATH);
         
         // Route parser
         $parser = new \Calf\HTTP\RouteParser($url);

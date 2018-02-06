@@ -49,7 +49,11 @@ class RouteParser
      * 
      */
     function __construct($path) {
-        $this->_path = $path;
+        // Trimming will kill our index
+        // so we'll be making sure that our index key is as-is
+        $this->_path = $path === '/' ? 
+            $path : 
+            trim($path, '/');
     }
     
     /**
@@ -64,33 +68,46 @@ class RouteParser
         // Make sure that matches are empty
         $this->_mapped = [];
         
+        // Save pattern for future use
         $this->_pattern = $route;
-        
-        // Replace keys with RegEx
-        $translated_path = preg_replace(['/\//i', '/({\w*?})/i'], ['\/', '([^\/\n\r\t]+)'], trim($route, '/'));
-        
-        // Active script or running script (this is when no redirection is being done in .htaccess)
-        $as =  str_replace('/', '\/', trim($_SERVER["SCRIPT_NAME"], '/') . ($translated_path ? '/' : ''));
-        
-        $matches = [];
-        
-        // Check regex if matching our current path
-        $test = preg_match('/^' . $translated_path . '$/i', $this->_path, $matches) ||
-                    preg_match('/^' . $as . $translated_path . '$/i', $this->_path, $matches);
 
-        // Make sure to remove the full string from the matches...
-        array_shift($matches);
+        // Find all route keys without RegEx pattern
+        // Example:
+        //      /get/product/{name}
+        // To:
+        //      /get/product/{name:.+}
+        $translation = preg_replace(['/\//i', '/{(\w*?)}/i'],['\/', '{$1:.+}'], $route);
+        
+        // Keys and RegEx 
+        $keyex = [];
+        // This will retrieve all keys and RegEx to be found
+        // on our matching
+        preg_match_all('/{(\w*?):(.*?)}/', $translation, $keyex);
+        
+        // Make sure all RegEx given in the route pattern
+        // are grouped
+        $groups = array_map(function($val) {
+            return '(' . trim(trim($val, ')'), '(') . ')';
+        }, $keyex[2]);
 
-        // Param keys
-        $keys = [];
-        preg_match_all('/\{(\w*?)\}/i', $route, $keys);
-                
-        if (isset($keys[1]) && count($matches) === count($keys[1])) {
-            for ($i = 0; $i < count($matches); $i++) {
-                $this->_mapped[$keys[1][$i]] = $matches[$i];
-            }
+        // Translate all keyex found on the route then
+        // Replace it with the grouped regex pattern
+        $translation = str_replace($keyex[0], $groups, $translation);
+        
+        // Make a temporary storage for our matches
+        $vals = [];
+        // Test the current route in iteration with the current path
+        // Then store the good finds
+        $test = preg_match("#^$translation$#i", $this->_path, $vals);
+        // Remove the first key, first key is usually the string that matches our pattern
+        array_shift($vals);
+
+        // Let's create the new mapping for key-value
+        for ($i = 0; $i < count($vals); $i++) {
+            $this->_mapped[$keyex[1][$i]] = $vals[$i];
         }
-        
+
+        // Return test results
         return $test;
     }
     

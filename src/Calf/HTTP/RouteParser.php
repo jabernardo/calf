@@ -71,8 +71,8 @@ class RouteParser
         // Example:
         //      /get/product/{name}
         // To:
-        //      /get/product/{name:.+}
-        $translation = preg_replace(['/\//i', '/{(\w*?)}/i'],['\/', '{$1:.+}'], $route);
+        //      /get/product/{name:([^\/\n\r\t]+)}
+        $translation = preg_replace(['/\//i', '/{(\w*?)}/i'],['\/', '{$1:([^\/\n\r\t]+)}'], $route);
         
         // Keys and RegEx 
         $keyex = [];

@@ -165,7 +165,7 @@ class Route
      * 
      */
     public function setCallable(callable $callback) {
-        $this->_method = $callback;
+        $this->_callback = $callback;
         
         return $this;
     }

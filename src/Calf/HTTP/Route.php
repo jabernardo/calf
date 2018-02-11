@@ -179,6 +179,10 @@ class Route
      * 
      */
     public function setMethod($method) {
+        if (!is_string($method) && !is_array($method)) {
+            throw new \Calf\Exception\InvalidArgument('Invalid HTTP method.');
+        }
+
         $this->_method = $method;
         
         return $this;

@@ -19,15 +19,15 @@ composer require jabernardo/calf
 
 require("vendor/autoload.php");
 
-$router = new \Calf\HTTP\Router();
+$app = new \Calf\App();
 
 $home = new \Calf\HTTP\Route('/', function($req, $res) {
-        return $res->set('Hello World!');
+        return $res->write('Hello World!');
     });
 
-$router->add($home);
+$app->add($home);
 
-$router->dispatch();
+$app->run();
 
 ```
 

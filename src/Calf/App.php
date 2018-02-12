@@ -35,17 +35,12 @@ class App
      *
      * @access  public
      * @param   mixed   $container
-     * @throws  \Calf\Exception\InvalidArgument     Container is not a saddle
      */
-    function __construct($container = null) {
+    function __construct(\Calf\Saddle $container = null) {
         $this->_router = new \Calf\HTTP\Router();
 
         if (is_null($container)) {
-            $this->_container  = new \Calf\Saddle();
-        }
-
-        if (is_object($container) && !($container instanceof \Calf\Saddle)) {
-            throw new \Calf\Exception\InvalidArgument('Container is not a saddle.');
+            $container  = new \Calf\Saddle();
         }
 
         $this->_container = $container;

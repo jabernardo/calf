@@ -1,75 +1,83 @@
 <?php
 
-// Include autoload
-require('../src/autoload.php');
+require_once('../src/autoload.php');
 
-use \Calf\HTTP\Router as Router;
-use \Calf\HTTP\Route as Route;
-use \Calf\HTTP\RouteGroup as RouteGroup;
-use \Calf\HTTP\Request as Request;
-use \Calf\HTTP\Response as Response;
+// Create a new Saddle (Dependency Injector)
+$container = new \Calf\Saddle();
 
-// Create a new instance of Calf Router
-$router = new Router();
+// Test message for our Saddle
+$container->message = 'Hello World';
 
-// Then create a new Route
-$home = new Route('/', function(Request $req, Response $res, array $args) {
-    return $res->write('Hello World');
-});
+// More examples for our Saddle
+$container->products = [
+    'supplies'  => ['Pen'],
+    'fruits'    => ['Apple', 'Pineapple']
+];
 
-// For some reason, you might need to use middlewares...
-$home->addMiddleware(function(Request $req, Response $res, callable $next) {
-    // Before route is called,
-    // Some codes might go here...
+$container->getProducts = function(\Calf\Saddle $c) {
+    return $c->products;
+};
 
-    // Call the next middleware
+// Let's instantiate our application
+$app = new \Calf\App($container);
+
+// Our homepage
+$home = new \Calf\HTTP\Route('/', function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, array $args = []) {
+    // $this->message is the data from our container
+    $res->write($this->message);
+
+    // Return response
+    return $res;
+}, ['GET', 'POST']);
+
+// Adding middleware to route
+$home->addMiddleware(function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, callable $next) {
+    $res->write('[BEGIN]');
     $next($req, $res);
-
-    // After route is executed.
-    $res->write('!');
+    $res->write('[END]');
 
     return $res;
 });
 
-// Finally after creating a route you'll be
-// needing to register it on our router
-$router->add($home);
+// Make sure to register our routes
+$app->add($home);
 
-//  Managing a large group of routes with RouteGroup
-$productsGroup = new RouteGroup('products');
+// Products Service Route Group
+$products = new \Calf\HTTP\RouteGroup('products');
 
-$productsGroup->add(
-    new Route('get', function(Request $req, Response $res, array $args) {
-        return $res->write(['Pen', 'Pineapple', 'Apple']);
-    })
+$products->add(
+    // Test using url:
+    // {host}/products/get
+    new \Calf\HTTP\Route('/get', function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, array $args = []) {
+        $res->write($this->getProducts);
+
+        return $res;
+    }, 'GET')
 );
 
-$productsGroup->add(
-    new Route('get/fruits', function(Request $req, Response $res, array $args) {
-        return $res->write(['Pineapple', 'Apple']);
-    })
+$products->add(
+    // Test using url:
+    // {host}/products/get/{fruits|supplies|...}
+    new \Calf\HTTP\Route('/get/{category:\w+}', function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, array $args = []) {
+        $prods = [];
+        $category = $args['category'];
+
+        if (!isset($this->getProducts[$category])) {
+            $res->write('No products found for keyword: ' .$category);
+
+            return $res;
+        }
+        
+        $prods = $this->getProducts[$category];
+        $res->write('Available: ');
+        $res->write(implode(', ', $prods));
+
+        return $res;
+    }, 'GET')
 );
 
-// Add group to router
-$router->addGroup($productsGroup);
+// Register route group to application
+$app->addGroup($products);
 
-// After all, you need some high-level control on all routes using middleware
-// here are some samples of middleware in router-level
-// NOTE: Enabling codes below will affect code samples for 
-//      -   /products/get
-//      -   /products/get/fruits
-
-// $router->addMiddleware(function(Request $req, Response $res, callable $next) {
-//     $res->set($res->get() . 'Message: ');
-//     $next($req, $res);
-//     return $res;
-// });
-
-// $router->addMiddleware(function(Request $req, Response $res, callable $next) {
-//     $next($req, $res);
-//     $res->set($res->get() . '!!');
-//     return $res;
-// });
-
-// Then let the Router do its work.
-$router->dispatch();
+// App and Running!
+$app->run();

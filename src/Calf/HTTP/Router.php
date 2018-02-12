@@ -219,6 +219,7 @@ class Router
 
         // Execute Route
         $this->_response = $active->process($this->_request, $this->_response);
-        $this->_response->render();
+        
+        return $this->_response;
     }
 }

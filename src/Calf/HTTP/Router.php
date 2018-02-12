@@ -158,10 +158,22 @@ class Router
      * Dispatch Router
      * 
      * @access  public
+     * @param   \Calf\HTTP\Request  $request    Request override
+     * @param   \Calf\HTTP\Response $response   Response override
      * @return void
      * 
      */
-    public function dispatch() {
+    public function dispatch(\Calf\HTTP\Request $request = null, \Calf\HTTP\Response $response = null) {
+        // Allow overrides for application
+        // This is to enable application level middlewares
+        if ($request) {
+            $this->_request = $request;
+        }
+
+        if ($response) {
+            $this->_response = $response;
+        }
+
         // Set `active` route to be an instance of Page Not Found
         // This will be our default page
         $active = new \Calf\HTTP\Route\PageNotFound();

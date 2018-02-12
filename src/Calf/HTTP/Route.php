@@ -45,7 +45,7 @@ class Route
      *      - Specified targeted request methods
      * 
      */
-    private $_method = '';
+    private $_method = [];
     
     /**
      * @var     array   Parameters
@@ -66,14 +66,14 @@ class Route
      * @return  \Calf\Exception\InvalidArgument   If callback is not callable
      * 
      */
-    function __construct($path, callable $callback, $method = '') {
+    function __construct($path, callable $callback, $method = []) {
         if (!is_callable($callback)) {
             throw new \Calf\Exception\InvalidArgument('Invalid callback.');
         }
         
-        $this->_path = trim($path, '/');
-        $this->_callback = $callback;
-        $this->_method = $method;
+        $this->setPath($path);
+        $this->setCallable($callback);
+        $this->setMethod($method);
     }
     
     /**
@@ -183,7 +183,7 @@ class Route
             throw new \Calf\Exception\InvalidArgument('Invalid HTTP method.');
         }
 
-        $this->_method = $method;
+        $this->_method = is_string($method) ? [$method] : $method;
         
         return $this;
     }

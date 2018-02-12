@@ -190,10 +190,9 @@ class Router
             // Check if current request method matches our applications
             // preferred request method
             // If Route's preferred HTTP Request is empty, it means it doesn't require method checking
-            $rest_test = (is_array($request_method) && in_array($this->_request->getMethod(), $request_method)) ||
-                (is_string($request_method) && strtoupper($request_method) === $this->_request->getMethod()) ||
-                ($request_method === '');
-            
+            $rest_test = is_array($request_method) && 
+                (in_array($this->_request->getMethod(), $request_method) || count($request_method) === 0);
+
             // Test Route pattern
             if ($rest_test && $parser->test($route)) {
                 // Set route that matches to be the active one

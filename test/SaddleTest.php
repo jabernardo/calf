@@ -14,45 +14,40 @@ class SaddleTest extends \PHPUnit\Framework\TestCase
     function testSaddle() {
         $container = new \Calf\Saddle(['message' => 'Hello World!']);
 
-        $this->assertTrue($container->exists('message'));
-        $this->assertEquals('Hello World!', $container->get('message'));
+        $this->assertTrue(isset($container->message));
+        $this->assertEquals('Hello World!', $container->message);
 
-        $container->add('callback', function($c) {
-            return $c->get('message');
-        }, true);
+        $container->callback = function($c) {
+            return $c->message;
+        };
 
-        $this->assertEquals('Hello World!', $container->get('callback'));
-        $this->assertTrue(is_callable($container->get('callback', true)));
+        $this->assertEquals('Hello World!', $container->callback);
+        $this->assertTrue(is_callable($container->raw('callback')));
 
-        $container->remove('message');
-        $container->add('Direction', 'up');
-        $container->update('Direction', 'down');
+        unset($container->message);
+        $container->Direction = 'up';
+        $container->Direction = 'down';
 
-        $this->assertEquals($container->get('Direction'), 'down');
-        $this->assertFalse($container->exists('message'));
+        $this->assertEquals($container->Direction, 'down');
+        $this->assertFalse(isset($container->message));
 
-        $container->add('safe', 'Another Test', true);
-
-        try {
-            $container->add(1, 'booooo');
-        } catch (\Calf\Exception\InvalidArgument $ex) {
-            $this->assertEquals($ex->getCode(), 101);
-        }
+        $container->safe = 'Another Test';
+        $container->protect('safe');
 
         try {
-            $container->add('safe', 'booooo');
+            $container->safe = 'booooo';
         } catch (\Calf\Exception\Runtime $ex) {
             $this->assertEquals($ex->getCode(), 100);
         }
 
         try {
-            $container->remove('safe');
+            unset($container->safe);
         } catch (\Calf\Exception\Runtime $ex) {
             $this->assertEquals($ex->getCode(), 100);
         }
 
         try {
-            $container->update('safe', 'just an update');
+            $container->safe = 'just an update';
         } catch (\Calf\Exception\Runtime $ex) {
             $this->assertEquals($ex->getCode(), 100);
         }

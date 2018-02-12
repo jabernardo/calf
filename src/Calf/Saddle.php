@@ -5,7 +5,7 @@ namespace Calf;
 /**
  * Saddle: A Simple Dependency Injection
  * 
- * @version     1.0.0
+ * @version     2.0.0
  * @author      John Aldrich Bernardo <4ldrich@protonmail.com>
  * @package     Calf
  */
@@ -44,7 +44,7 @@ class Saddle
      */
     function __construct(array $data = []) {
         foreach ($data as $key => $value) {
-            $this->add($key, $value);
+            $this->__set($key, $value);
         }
     }
 
@@ -55,40 +55,21 @@ class Saddle
      * @param   string  $key        Service ID
      * @param   mixed   $value      Service Object
      * @param   boolean $protected  Protected Service
-     * @return  object  Container
+     * @return  void
+     * @throws  \Calf\Exception\InvalidArgument     Key must be string
+     * @throws  \Calf\Exception\Runtime             Key is protected
      */
-    function add($key, $value, $protected = false) {
+    function __set($key, $value) {
         if (!is_string($key)) {
             throw new \Calf\Exception\InvalidArgument('Key must be string.');
         }
 
-        if (isset($this->_keys[$key])) {
-            throw new \Calf\Exception\Runtime('Duplicated key.');
+        if (isset($this->_protected[$key])) {
+            throw new \Calf\Exception\Runtime('Key is protected: '. $key);
         }
 
         $this->_keys[$key] = true;
         $this->_values[$key] = $value;
-
-        if ($protected) {
-            $this->_protected[$key] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Check if service exists
-     *
-     * @access  public
-     * @param   string  $key    Service ID
-     * @return  boolean
-     */
-    public function exists($key) {
-        if (!is_string($key)) {
-            throw new \Calf\Exception\InvalidArgument('Key must be string.');
-        }
-
-        return isset($this->_keys[$key]);
     }
 
     /**
@@ -98,22 +79,79 @@ class Saddle
      * 
      * @access  public
      * @param   string  $key    Service ID
-     * @param   boolean $raw    Get service value in raw format
      * @return  void
+     * @throws  \Calf\Exception\InvalidArgument Key must be string
+     * @throws  \Calf\Exception\Runtime         Key doesn't exists
      */
-    function get($key, $raw = false) {
+    function __get($key) {
         if (!is_string($key)) {
             throw new \Calf\Exception\InvalidArgument('Key must be string.');
         }
 
         if (!isset($this->_keys[$key])) {
-            throw new \Calf\Exception\Runtime('Key doesn\'t exists.');
+            throw new \Calf\Exception\Runtime('Key doesn\'t exists: ' . $key);
         }
 
-        if (is_callable($this->_values[$key]) && !$raw) {
+        if (is_callable($this->_values[$key])) {
             $call = $this->_values[$key];
 
             return \call_user_func($call, $this);
+        }
+
+        return $this->_values[$key];
+    }
+
+    /**
+     * Isset override
+     *
+     * @access  public
+     * @param   string  $key    Service ID
+     * @return  boolean
+     * @throws  \Calf\Exception\InvalidArgument     Key must be string
+     */
+    function __isset($key) {
+        if (!is_string($key)) {
+            throw new \Calf\Exception\InvalidArgument('Key must be string.');
+        }
+
+        return isset($this->_keys[$key]);
+    }
+
+    /**
+     * Protect key
+     *
+     * @access  public
+     * @return  void
+     * @throws  \Calf\Exception\InvalidArgument Key must be string
+     * @throws  \Calf\Exception\Runtime         Key doesn't exists
+     */
+    public function protect($key) {
+        if (!is_string($key)) {
+            throw new \Calf\Exception\InvalidArgument('Key must be string.');
+        }
+
+        if (!isset($this->_keys[$key])) {
+            throw new \Calf\Exception\Runtime('Key doesn\'t exists: ' . $key);
+        }
+
+        $this->_protected[$key] = true;
+    }
+
+    /**
+     * Get raw value
+     *
+     * @access  public
+     * @return  void
+     * @throws  \Calf\Exception\InvalidArgument Key must be string
+     * @throws  \Calf\Exception\Runtime         Key doesn't exists
+     */
+    public function raw($key) {
+        if (!is_string($key)) {
+            throw new \Calf\Exception\InvalidArgument('Key must be string.');
+        }
+
+        if (!isset($this->_keys[$key])) {
+            throw new \Calf\Exception\Runtime('Key doesn\'t exists: ' . $key);
         }
 
         return $this->_values[$key];
@@ -124,51 +162,25 @@ class Saddle
      *
      * @access  public
      * @param   string  $key    Service ID
-     * @return  object  Container
+     * @return  void
+     * @throws  \Calf\Exception\InvalidArgument Key must be string
+     * @throws  \Calf\Exception\Runtime         Key doesn't exists
+     * @throws  \Calf\Exception\Runtime         Key is protected
      */
-    function remove($key) {
+    function __unset($key) {
         if (!is_string($key)) {
             throw new \Calf\Exception\InvalidArgument('Key must be string.');
         }
 
         if (!isset($this->_keys[$key])) {
-            throw new \Calf\Exception\Runtime('Key doesn\'t exists.');
+            throw new \Calf\Exception\Runtime('Key doesn\'t exists: ' . $key);
         }
 
         if (isset($this->_protected[$key])) {
-            throw new \Calf\Exception\Runtime('Key is protected.');
+            throw new \Calf\Exception\Runtime('Key is protected: ' . $key);
         }
 
         unset($this->_keys[$key]);
         unset($this->_values[$key]);
-
-        return $this;
-    }
-
-    /**
-     * Update Service
-     *
-     * @access  public
-     * @param   string  $key    Service ID
-     * @param   mixed   $value  Service
-     * @return  object  container
-     */
-    function update($key, $value) {
-        if (!is_string($key)) {
-            throw new \Calf\Exception\InvalidArgument('Key must be string.');
-        }
-
-        if (!isset($this->_keys[$key])) {
-            throw new \Calf\Exception\Runtime('Key doesn\'t exists.');
-        }
-
-        if (isset($this->_protected[$key])) {
-            throw new \Calf\Exception\Runtime('Key is protected.');
-        }
-
-        $this->_keys[$key] = true;
-        $this->_values[$key] = $value;
-
-        return $this;
     }
 }

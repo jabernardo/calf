@@ -176,7 +176,7 @@ class Router
 
         // Set `active` route to be an instance of Page Not Found
         // This will be our default page
-        $active = new \Calf\HTTP\Route\PageNotFound();
+        $active = new \Calf\HTTP\Route\PageNotFound($this->_request, $this->_response);
         
         // Overriding default 404 Page
         if (isset($this->_routes['404'])) {

@@ -17,9 +17,9 @@ class PageNotFound extends \Calf\HTTP\Route
      * @access  public
      * 
      */
-    function __construct() {
+    function __construct(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res) {
         parent::__construct('404', function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res) {
-            $res->set(
+            $res->write(
                 '<!DOCTYPE html>'
                 . '<!-- Calf Router for PHP by John Aldrich Bernardo -->'
                 . '<html>'

@@ -96,13 +96,10 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         });
         
         $router->add($home);
-        
-        ob_start();
-        $router->dispatch();
-        $output = ob_get_contents();
-        ob_end_clean();
-        
-        $this->assertEquals('Hello World!', $output);
+
+        $response = $router->dispatch();
+
+        $this->assertEquals($response->get(true), 'Hello World!');
     }
     
     public function testDispatchWrite() {
@@ -122,12 +119,9 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         
         $router->add($home);
         
-        ob_start();
-        $router->dispatch();
-        $output = ob_get_contents();
-        ob_end_clean();
-        
-        $this->assertEquals('Hello World!', $output);
+        $response = $router->dispatch();
+
+        $this->assertEquals($response->get(true), 'Hello World!');
     }
 
     public function testDispatchMiddleware() {
@@ -152,12 +146,9 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         
         $router->add($home);
         
-        ob_start();
-        $router->dispatch();
-        $output = ob_get_contents();
-        ob_end_clean();
-        
-        $this->assertEquals('1Hello World!1', $output);
+        $response = $router->dispatch();
+
+        $this->assertEquals($response->get(true), '1Hello World!1');
     }
     
     public function testDispatchMiddlewareMultiple() {
@@ -190,12 +181,9 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         
         $router->add($home);
         
-        ob_start();
-        $router->dispatch();
-        $output = ob_get_contents();
-        ob_end_clean();
-        
-        $this->assertEquals('21Hello World!12', $output);
+        $response = $router->dispatch();
+
+        $this->assertEquals($response->get(true), '21Hello World!12');
     }
 
     public function testRouteGroup() {
@@ -222,11 +210,8 @@ class RouterTest extends \PHPUnit\Framework\TestCase
 
         $router->addGroup($productsGroup);
 
-        ob_start();
-        $router->dispatch();
-        $output = ob_get_contents();
-        ob_end_clean();
-        
-        $this->assertEquals('Pen, Pineapple, Apple', $output);
+        $response = $router->dispatch();
+
+        $this->assertEquals('Pen, Pineapple, Apple', $response->get(true));
     }
 }

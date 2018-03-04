@@ -114,10 +114,15 @@ class Request
      * Get request URL
      * 
      * @access  public
+     * @param   int     $component  URL parse_url component
      * @return  string
      * 
      */
-    public function getURL() {
+    public function getURL(int $component = -1) {
+        if ($component > -1) {
+            return parse_url($_SERVER['REQUEST_URI'], $component);
+        }
+
         return $_SERVER['REQUEST_URI'];
     }
     

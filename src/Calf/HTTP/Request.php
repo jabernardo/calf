@@ -118,7 +118,7 @@ class Request
      * @return  string
      * 
      */
-    public function getURL(int $component = -1) {
+    public function getURL($component = -1) {
         if ($component > -1) {
             return parse_url($_SERVER['REQUEST_URI'], $component);
         }

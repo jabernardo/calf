@@ -5,7 +5,7 @@ namespace Calf;
 /**
  * Deferred Callable
  * 
- * @version     1.0
+ * @version     1.1
  * @author      John Aldrich Bernardo <4ldrich@protonmail.com>
  * @package     Calf
  * 
@@ -33,9 +33,14 @@ class DeferredCallable
      *
      * @param   \Callable   $callable   Callback for route
      * @param   mixed       $container  Callback DI
+     * @throws  \Calf\Exception\InvalidArgument     Invalid callable
      */
     public function __construct($callable, $container = null)
     {
+        if (!is_object($callable) && !($callable instanceof \Closure)) {
+            throw new \Calf\Exception\InvalidArgument('Invalid callable.');
+        }
+
         $this->_callable = $callable;
         $this->_container = $container;
     }
@@ -49,10 +54,7 @@ class DeferredCallable
     public function __invoke()
     {
         $callable = $this->_callable;
-        
-        if (is_object($callable) && ($callable instanceof \Closure)) {
-            $callable = $callable->bindTo($this->_container);
-        }
+        $callable = $callable->bindTo($this->_container);
 
         $args = func_get_args();
         

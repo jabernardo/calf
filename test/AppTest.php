@@ -35,7 +35,7 @@ class AppTest extends \PHPUnit\Framework\TestCase
         $_SERVER["SCRIPT_NAME"] = '/index.php';
 
         $home = new \Calf\HTTP\Route('/', function($req, $res) {
-            return $res->write('Hello World!');
+            return $res->write($this->message);
         });
     
         $app->add($home);

@@ -9,6 +9,19 @@ if (!class_exists('\PHPUnit\Framework\TestCase') &&
     class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
 }
 
+// test compatibility
+if (!function_exists('getallheaders')) {
+    function getallheaders() {
+    $headers = [];
+    foreach ($_SERVER as $name => $value) {
+        if (substr($name, 0, 5) == 'HTTP_') {
+            $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+        }
+    }
+    return $headers;
+    }
+}
+
 class RouterTest extends \PHPUnit\Framework\TestCase
 {
     public function testRouterInstance() {
@@ -86,9 +99,15 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     public function testDispatch() {
         $_SERVER = [];
         $_SERVER['REQUEST_URI'] = '/';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER["SCRIPT_NAME"] = '/index.php';
-        
+        $_SERVER['SCRIPT_NAME'] = 'index.php';
+
+        $_GET = [];
+        $_POST = [];
+        $_FILES = [];
+
         $router = new \Calf\HTTP\Router();
         
         $home = new \Calf\HTTP\Route('/', function($req, $res) {
@@ -105,9 +124,15 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     public function testDispatchWrite() {
         $_SERVER = [];
         $_SERVER['REQUEST_URI'] = '/';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER["SCRIPT_NAME"] = '/index.php';
-        
+        $_SERVER['SCRIPT_NAME'] = 'index.php';
+
+        $_GET = [];
+        $_POST = [];
+        $_FILES = [];
+
         $router = new \Calf\HTTP\Router();
         
         $home = new \Calf\HTTP\Route('/', function($req, $res) {
@@ -127,8 +152,14 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     public function testDispatchMiddleware() {
         $_SERVER = [];
         $_SERVER['REQUEST_URI'] = '/';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER["SCRIPT_NAME"] = '/index.php';
+        $_SERVER['SCRIPT_NAME'] = 'index.php';
+
+        $_GET = [];
+        $_POST = [];
+        $_FILES = [];
         
         $router = new \Calf\HTTP\Router();
         
@@ -154,8 +185,14 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     public function testDispatchMiddlewareMultiple() {
         $_SERVER = [];
         $_SERVER['REQUEST_URI'] = '/';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER["SCRIPT_NAME"] = '/index.php';
+        $_SERVER['SCRIPT_NAME'] = 'index.php';
+
+        $_GET = [];
+        $_POST = [];
+        $_FILES = [];
         
         $router = new \Calf\HTTP\Router();
         
@@ -189,9 +226,15 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     public function testRouteGroup() {
         $_SERVER = [];
         $_SERVER['REQUEST_URI'] = '/products/get';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER["SCRIPT_NAME"] = '/index.php';
-        
+        $_SERVER['SCRIPT_NAME'] = 'index.php';
+
+        $_GET = [];
+        $_POST = [];
+        $_FILES = [];
+
         $router = new \Calf\HTTP\Router();
         
         $productsGroup = new \Calf\HTTP\RouteGroup('products');

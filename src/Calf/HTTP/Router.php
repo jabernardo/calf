@@ -184,7 +184,7 @@ class Router
         }
         
         // Get URL path
-        $url = parse_url($this->_request->getURL(), PHP_URL_PATH);
+        $url = parse_url($this->_request->url(), PHP_URL_PATH);
         
         // Route parser
         $parser = new \Calf\HTTP\RouteParser($url);
@@ -203,7 +203,7 @@ class Router
             // preferred request method
             // If Route's preferred HTTP Request is empty, it means it doesn't require method checking
             $rest_test = is_array($request_method) && 
-                (in_array($this->_request->getMethod(), $request_method) || count($request_method) === 0);
+                (in_array($this->_request->method(), $request_method) || count($request_method) === 0);
 
             // Test Route pattern
             if ($rest_test && $parser->test($route)) {

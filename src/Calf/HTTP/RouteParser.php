@@ -68,14 +68,27 @@ class RouteParser
         $this->_pattern = $route;
 
         // Find all route keys without RegEx pattern
+        //
         // Example:
         //      /get/product/{name}
         // To:
-        //      /get/product/{name:([^\/\n\r\t]+)}
-        $translation = preg_replace(['/\//i', '/{(\w*?)}/i'],['\/', '{$1:([^\/\n\r\t]+)}'], $route);
+        //      /get/product/{name:([^\/]+)}
+        //
+        // Optional parameters (e.g)
+        //
+        //  Options and required
+        //      /pages[/{page:\d+}]/category{category}
+        //  Options on middle
+        //      api/test/get[{asd:\d+}]/fruits
+        //  Single options
+        //      /pages[/{page:\d+}]
+        //  Multiple Optionals
+        //      /pages[/{page:\d+}]/category[/{category}]
+        $translation = preg_replace(['/\//is', '/\[([^\[]+)\]/is', '/{(\w*?)}/is'],['\/', '(?:$1)?', '{$1:([^\/]+)}'], $route);
         
         // Keys and RegEx 
         $keyex = [];
+        
         // This will retrieve all keys and RegEx to be found
         // on our matching
         preg_match_all('/{(\w*?):(.*?)}/', $translation, $keyex);
@@ -92,17 +105,21 @@ class RouteParser
         
         // Make a temporary storage for our matches
         $vals = [];
+
         // Test the current route in iteration with the current path
         // Then store the good finds
-        $test = preg_match("#^$translation$#i", $this->_path, $vals);
+        $test = preg_match("#^$translation$#is", $this->_path, $vals);
+
         // Remove the first key, first key is usually the string that matches our pattern
         array_shift($vals);
-
+        
         // Let's create the new mapping for key-value
         for ($i = 0; $i < count($vals); $i++) {
-            $this->_mapped[$keyex[1][$i]] = $vals[$i];
+            if (isset($keyex[1][$i]) && isset($vals[$i])) {
+                $this->_mapped[$keyex[1][$i]] = $vals[$i];
+            }
         }
-
+        
         // Return test results
         return $test;
     }

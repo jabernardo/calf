@@ -42,6 +42,33 @@ $home->addMiddleware(function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res,
 // Make sure to register our routes
 $app->add($home);
 
+// Optional Parameters
+$articles = new \Calf\HTTP\Route('/articles[/{article}]', function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, array $params = []) {
+    if (isset($params['article']) && $params['article']) {
+        return 'Are you looking for articles related to `' . $params['article'] . '`?';
+    }
+
+    return 'Articles will be displayed here.';
+});
+
+$app->add($articles);
+
+// Optionals and optionals
+$articles_pages = new \Calf\HTTP\Route('/article[/{article}]/pages[/{page}]', function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, array $params = []) {
+    $article = $params['article'] ?: '';
+    $page = $params['page'] ?: '';
+
+    if ($article && $page) {
+        return "You are looking at $article at page $page.";
+    } else if ($article) {
+        return "What page are you now on `$article`?";
+    }
+
+    return 'Forgot your bookmark?';
+});
+
+$app->add($articles_pages);
+
 // Products Service Route Group
 $products = new \Calf\HTTP\RouteGroup('products');
 

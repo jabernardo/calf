@@ -267,7 +267,7 @@ class Request
      */
     public function file($name) {
         return isset($this->_files[$name]) ?
-                $this->_files[$name] :
+                new \Calf\HTTP\FileUpload($name) :
                 null;
     }
 
@@ -278,8 +278,14 @@ class Request
      * @return  array
      * 
      */
-    public function files() {
-        return $this->_files;
+    public function files(array $files) {
+        $uploads = [];
+
+        foreach ($files as $file) {
+            array_push($uploads, $this->file($file));
+        }
+
+        return $uploads;
     }
 
     /**

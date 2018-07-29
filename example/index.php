@@ -54,7 +54,7 @@ $articles = new \Calf\HTTP\Route('/articles[/{article}]', function(\Calf\HTTP\Re
 $app->add($articles);
 
 // Optionals and optionals
-$articles_pages = new \Calf\HTTP\Route('/article[/{article}]/pages[/{page}]', function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, array $params = []) {
+$articles_pages = new \Calf\HTTP\Route('/articles[/{article}]/pages[/{page}]', function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, array $params = []) {
     $article = $params['article'] ?: '';
     $page = $params['page'] ?: '';
 

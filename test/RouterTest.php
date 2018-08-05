@@ -272,7 +272,11 @@ class RouterTest extends \PHPUnit\Framework\TestCase
 
         $router = new \Calf\HTTP\Router();
         
-        $home = new \Calf\HTTP\Route('/pages[/{page}]', function($req, $res, array $params = []) {
+        $home = new \Calf\HTTP\Route('/pages[/{page:\d+}]', function($req, $res, array $params = []) {
+            if (!isset($params['page'])) {
+                return 'All pages are here';
+            }
+
             return $res->set('You are in page ' . $params['page']);
         });
         
@@ -281,5 +285,20 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $response = $router->dispatch();
 
         $this->assertEquals($response->get(true), 'You are in page 12');
+
+        $_SERVER = [];
+        $_SERVER['REQUEST_URI'] = '/pages';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['SCRIPT_NAME'] = 'index.php';
+
+        $_GET = [];
+        $_POST = [];
+        $_FILES = [];
+
+        $response = $router->dispatch();
+
+        $this->assertEquals($response->get(true), 'All pages are here');
     }
 }

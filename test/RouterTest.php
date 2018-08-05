@@ -257,4 +257,29 @@ class RouterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('Pen, Pineapple, Apple', $response->get(true));
     }
+
+    public function testRoutePatterns() {
+        $_SERVER = [];
+        $_SERVER['REQUEST_URI'] = '/pages/12';
+        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['SCRIPT_NAME'] = 'index.php';
+
+        $_GET = [];
+        $_POST = [];
+        $_FILES = [];
+
+        $router = new \Calf\HTTP\Router();
+        
+        $home = new \Calf\HTTP\Route('/pages[/{page}]', function($req, $res, array $params = []) {
+            return $res->set('You are in page ' . $params['page']);
+        });
+        
+        $router->add($home);
+
+        $response = $router->dispatch();
+
+        $this->assertEquals($response->get(true), 'You are in page 12');
+    }
 }

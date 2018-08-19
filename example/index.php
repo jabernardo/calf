@@ -22,13 +22,14 @@ $container->getProducts = function(\Calf\Saddle $c) {
 $app = new \Calf\App($container);
 
 // Our homepage
-$home = new \Calf\HTTP\Route('/', function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, array $args = []) {
+$home = (new \Calf\HTTP\Route('/', function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, array $args = []) {
     // $this->message is the data from our container
     $res->write($this->message);
+    $res->write(' to ' . $req->attribute('route')->getName());
 
     // Return response
     return $res;
-}, ['GET', 'POST']);
+}, ['GET', 'POST']))->setName('Home');
 
 // Adding middleware to route
 $home->addMiddleware(function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, callable $next) {

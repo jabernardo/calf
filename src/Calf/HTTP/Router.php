@@ -213,6 +213,9 @@ class Router
                 // Set parameters for route
                 $active->setParameters($parser->getMatches());
                 
+                // Set route information as request attribute
+                $this->_request->withAttribute('route', $active);
+
                 // Then break this loop...
                 break;
             }

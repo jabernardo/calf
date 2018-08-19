@@ -52,6 +52,13 @@ class Request
      * 
      */
     private $_method = 'GET';
+
+    /**
+     * @access  private
+     * @var     array   Request attributes
+     * 
+     */
+    private $_attributes = [];
     
     /**
      * Class construct
@@ -388,5 +395,30 @@ class Request
      */
     public function cookies() {
         return $this->_cookies;
+    }
+
+    /**
+     * Get attribute value
+     * 
+     * @access  public
+     * @return  mixed
+     * 
+     */
+    public function attribute($name) {
+        return isset($this->_attributes[$name]) ?
+            $this->_attributes[$name] :
+            null;
+    }
+
+    /**
+     * Set attribute
+     * 
+     * @access  public
+     * @param   string  $name   Attribute name
+     * @param   mixed   $value  Attribute value
+     * 
+     */
+    public function withAttribute($name, $value) {
+        $this->_attributes[$name] = $value;
     }
 }

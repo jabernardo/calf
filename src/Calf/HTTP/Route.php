@@ -41,7 +41,7 @@ class Route
      *  ''
      *      - Accept all request methods
      * 
-     *  ['GET', 'POST']
+     *  ['GET', 'POST', 'PUT', 'DELETE']
      *      - Specified targeted request methods
      * 
      */
@@ -66,7 +66,7 @@ class Route
      * @return  \Calf\Exception\InvalidArgument   If callback is not callable
      * 
      */
-    function __construct($path, callable $callback, $method = []) {
+    function __construct($path, callable $callback, $method = ['GET', 'POST', 'PUT', 'DELETE']) {
         if (!is_callable($callback)) {
             throw new \Calf\Exception\InvalidArgument('Invalid callback.');
         }

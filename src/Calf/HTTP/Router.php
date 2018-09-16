@@ -15,7 +15,12 @@ class Router
      * @var     array   Routes  registered
      * 
      */
-    private $_routes = [];
+    private $_routes = [
+        'GET'       => [],
+        'POST'      => [],
+        'PUT'       => [],
+        'DELETE'    => []
+    ];
     
     /**
      * @var     \Calf\HTTP\Request    Request object
@@ -64,13 +69,15 @@ class Router
         // For php 5.4 compatibility
         $path = $route->getPath();
         
-        // Check for duplicated routes
-        if (isset($this->_routes[$path])) {
-            throw new \Calf\Exception\Router\DuplicatedPath('"' . $path . '" already exists.');
+        foreach ($route->getMethod() as $route_method) {
+            // Check for duplicated routes
+            if (isset($this->_routes[$route_method][$path])) {
+                throw new \Calf\Exception\Router\DuplicatedPath('Route with path "' . $path . '" already exists.');
+            }
+            
+            // We'll be using the path as key for the new route
+            $this->_routes[$route_method][$path] = $route;
         }
-        
-        // We'll be using the path as key for the new route
-        $this->_routes[$path] = $route;
     }
 
     /**
@@ -105,53 +112,66 @@ class Router
      * Remove Route
      * 
      * @access  public
-     * @param   mixed  $path   Route Path
+     * @param   mixed   $path   Route Path
+     * @param   string  $method Request method
      * @return  bool
      * 
      * @throws  \Calf\Exception\InvalidArgument   Invalid argument exception
      * 
      */
-    public function remove($path) {
+    public function remove($path, $methods = ['GET', 'POST', 'PUT', 'DELETE']) {
         $route = null;
+        $deleted = false;
         
         if (is_object($path) && $path instanceof \Calf\HTTP\Route) {
             $route = $path->getPath();
+            $methods = $path->getMethod();
         } else if (is_string($path)) {
             $route = trim($path, '/');
         } else {
             throw new \Calf\Exception\InvalidArgument('Invalid route');
         }
         
-        if (is_string($route) && isset($this->_routes[$route])) {
-            unset($this->_routes[$route]);
-            return true;
+        foreach ($methods as $method) {
+            if (is_string($route) && isset($this->_routes[$method][$route])) {
+                unset($this->_routes[$method][$route]);
+                $deleted = true;
+            } 
         }
-    
-        return false;
+
+        return $deleted;
     }
     
     /**
      * Check if Route Path exists
      * 
      * @access  public
-     * @param   mixed  $path   Route path
+     * @param   mixed  $path    Route path
+     * @param   string $method  Reques
      * @return  bool
      * 
      * @throws  \Calf\Exception\InvalidArgument   Invalid argument exception
      * 
      */
-    public function exists($path) {
+    public function exists($path, array $methods = ['GET', 'POST', 'PUT', 'DELETE']) {
         $route = null;
-        
+
         if (is_object($path) && $path instanceof \Calf\HTTP\Route) {
             $route = $path->getPath();
+            $methods = $path->getMethod();
         } else if (is_string($path)) {
             $route = trim($path, '/');
         } else {
             throw new \Calf\Exception\InvalidArgument('Invalid route');
         }
         
-        return is_string($route) && isset($this->_routes[$route]);
+        foreach ($methods as $method) {
+            if (is_string($route) && isset($this->_routes[$method][$route])) {
+                return true;
+            }
+        }
+
+        return false;
     }
     
     /**
@@ -174,13 +194,16 @@ class Router
             $this->_response = $response;
         }
 
+        // Request method
+        $request_method = $this->_request->method();
+
         // Set `active` route to be an instance of Page Not Found
         // This will be our default page
         $active = new \Calf\HTTP\Route\PageNotFound($this->_request, $this->_response);
-        
+
         // Overriding default 404 Page
-        if (isset($this->_routes['404'])) {
-            $active = $this->_routes['404'];
+        if (isset($this->_routes[$request_method]['404'])) {
+            $active = $this->_routes[$request_method]['404'];
         }
         
         // Get URL path
@@ -189,26 +212,11 @@ class Router
         // Route parser
         $parser = new \Calf\HTTP\RouteParser($url);
         
-        foreach (array_keys($this->_routes) as $route) {
-            // Check if request method matches
-            $request_method = $this->_routes[$route]->getMethod();
-            
-            if (is_array($request_method)) {
-                // Make sure all request methods are in uppercase
-                // Most of servers are configured with uppercase
-                $request_method = array_map('strtoupper', $request_method);
-            }
-            
-            // Check if current request method matches our applications
-            // preferred request method
-            // If Route's preferred HTTP Request is empty, it means it doesn't require method checking
-            $rest_test = is_array($request_method) && 
-                (in_array($this->_request->method(), $request_method) || count($request_method) === 0);
-
+        foreach ($this->_routes[$request_method] as $route) {
             // Test Route pattern
-            if ($rest_test && $parser->test($route)) {
+            if ($parser->test($route->getPath())) {
                 // Set route that matches to be the active one
-                $active = $this->_routes[$parser->getPattern()];
+                $active = $this->_routes[$request_method][$parser->getPattern()];
                 
                 // Set parameters for route
                 $active->setParameters($parser->getMatches());
@@ -220,7 +228,7 @@ class Router
                 break;
             }
         }
-        
+
         // Make sure that active route is an instance of \Calf\HTTP\Route
         if (!($active instanceof \Calf\HTTP\Route)) {
             throw new \Calf\Exception\Runtime('Didn\'t fetch a valid route.');

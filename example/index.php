@@ -29,7 +29,7 @@ $home = (new \Calf\HTTP\Route('/', function(\Calf\HTTP\Request $req, \Calf\HTTP\
 
     // Return response
     return $res;
-}, ['GET', 'POST']))->setName('Home');
+}, ['GET']))->setName('Home');
 
 // Adding middleware to route
 $home->addMiddleware(function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, callable $next) {
@@ -40,8 +40,16 @@ $home->addMiddleware(function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res,
     return $res;
 });
 
+$home_post = (new \Calf\HTTP\Route('/', function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, array $args = []) {
+    // Return response
+    return [
+        'page' => $req->attribute('route')->getName()
+    ];
+}, ['POST']))->setName('Home-POST');
+
 // Make sure to register our routes
 $app->add($home);
+$app->add($home_post);
 
 // Optional Parameters
 $articles = new \Calf\HTTP\Route('/articles[/{article}]', function(\Calf\HTTP\Request $req, \Calf\HTTP\Response $res, array $params = []) {

@@ -9,10 +9,13 @@ if (!class_exists('\PHPUnit\Framework\TestCase') &&
     class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
 }
 
+// Include vendor autoload
+require('vendor/autoload.php');
+
 class SaddleTest extends \PHPUnit\Framework\TestCase
 {
     function testSaddle() {
-        $container = new \Calf\Saddle(['message' => 'Hello World!']);
+        $container = new \Saddle\Container(['message' => 'Hello World!']);
 
         $this->assertTrue(isset($container->message));
         $this->assertEquals('Hello World!', $container->message);

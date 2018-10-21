@@ -22,10 +22,14 @@ if (!function_exists('getallheaders')) {
     }
 }
 
+// Include vendor autoload
+require('vendor/autoload.php');
+
 class AppTest extends \PHPUnit\Framework\TestCase
 {
     public function testApp() {
-        $container = new \Calf\Saddle();
+        $container = new \Saddle\Container();
+
         $container->message = 'Hello World!';
 
         $this->assertEquals($container->message, 'Hello World!');
@@ -36,7 +40,7 @@ class AppTest extends \PHPUnit\Framework\TestCase
 
         $c = $app->getContainer();
 
-        $this->assertTrue($c instanceof \Calf\Saddle);
+        $this->assertTrue($c instanceof \Saddle\Container);
 
         $r = $app->getRouter();
 

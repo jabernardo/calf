@@ -2,6 +2,8 @@
 
 namespace Calf;
 
+use Saddle;
+
 /**
  * Calf Application
  * 
@@ -26,7 +28,7 @@ class App
      * @access
      *
      * @var     private
-     * @var     \Calf\Saddle
+     * @var     object      Dependency Container
      */
     private $_container;
 
@@ -36,11 +38,11 @@ class App
      * @access  public
      * @param   mixed   $container
      */
-    function __construct(\Calf\Saddle $container = null) {
+    function __construct($container = null) {
         $this->_router = new \Calf\HTTP\Router();
 
         if (is_null($container)) {
-            $container  = new \Calf\Saddle();
+            $container  = new \Saddle\Container();
         }
 
         $this->_container = $container;
@@ -78,7 +80,8 @@ class App
      * Get application container instance
      *
      * @access  public
-     * @return  \Calf\Saddle
+     * @return  \Saddle\Container
+     * 
      */
     public function getContainer() {
         return $this->_container;

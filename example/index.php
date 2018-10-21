@@ -1,9 +1,10 @@
 <?php
 
 require_once('../src/autoload.php');
+require_once('./vendor/autoload.php');
 
 // Create a new Saddle (Dependency Injector)
-$container = new \Calf\Saddle();
+$container = new \Saddle\Container();
 
 // Test message for our Saddle
 $container->message = 'Hello World';
@@ -14,7 +15,7 @@ $container->products = [
     'fruits'    => ['Apple', 'Pineapple']
 ];
 
-$container->getProducts = function(\Calf\Saddle $c) {
+$container->getProducts = function(\Saddle\Container $c) {
     return $c->products;
 };
 

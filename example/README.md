@@ -3,7 +3,8 @@
 ```sh
 
 cd calf/example;
-php -S localhost:8080 index.php
+composer require jabernardo/saddle:dev-master
+php -S localhost:8080
 
 ```
 Visit `localhost:8080` on  your browser.

@@ -24,6 +24,18 @@ if (!function_exists('getallheaders')) {
 
 class RouterTest extends \PHPUnit\Framework\TestCase
 {
+    private $requestTimeFloat;
+
+    public function setUp()
+    {
+        $this->requestTimeFloat = $_SERVER['REQUEST_TIME_FLOAT'];
+    }
+
+    public function tearDown()
+    {
+        $_SERVER['REQUEST_TIME_FLOAT'] = $this->requestTimeFloat;
+    }
+    
     public function testRouterInstance() {
         $router = new \Calf\HTTP\Router();
         

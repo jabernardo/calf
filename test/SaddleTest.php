@@ -14,6 +14,18 @@ require('vendor/autoload.php');
 
 class SaddleTest extends \PHPUnit\Framework\TestCase
 {
+    private $requestTimeFloat;
+
+    public function setUp()
+    {
+        $this->requestTimeFloat = $_SERVER['REQUEST_TIME_FLOAT'];
+    }
+
+    public function tearDown()
+    {
+        $_SERVER['REQUEST_TIME_FLOAT'] = $this->requestTimeFloat;
+    }
+    
     function testSaddle() {
         $container = new \Saddle\Container(['message' => 'Hello World!']);
 

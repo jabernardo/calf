@@ -27,6 +27,18 @@ require('vendor/autoload.php');
 
 class AppTest extends \PHPUnit\Framework\TestCase
 {
+    private $requestTimeFloat;
+
+    public function setUp()
+    {
+        $this->requestTimeFloat = $_SERVER['REQUEST_TIME_FLOAT'];
+    }
+
+    public function tearDown()
+    {
+        $_SERVER['REQUEST_TIME_FLOAT'] = $this->requestTimeFloat;
+    }
+    
     public function testApp() {
         $container = new \Saddle\Container();
 

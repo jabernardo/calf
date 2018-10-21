@@ -14,8 +14,6 @@ install:
   - if [ "$deps" == "high" ]; then composer config platform.php 7.2.4; composer update $flags; fi
   # install dependencies using system provided composer binary
   - composer install $flags
-  # install dependencies using composer from source
-  - bin/composer install $flags
 
 script: phpunit
 

@@ -7,6 +7,16 @@ php:
   - 5.5
   - 5.4
 
+install:
+  # flags to pass to install
+  - flags="--ansi --prefer-dist --no-interaction --optimize-autoloader --no-suggest --no-progress"
+  # update deps to latest in case of high deps build
+  - if [ "$deps" == "high" ]; then composer config platform.php 7.2.4; composer update $flags; fi
+  # install dependencies using system provided composer binary
+  - composer install $flags
+  # install dependencies using composer from source
+  - bin/composer install $flags
+
 script: phpunit
 
 matrix:

@@ -3,7 +3,7 @@
 ```sh
 
 cd calf/example;
-composer require jabernardo/saddle:dev-master
+composer install
 php -S localhost:8080
 
 ```

@@ -1,5 +1,5 @@
 {
     "require": {
-        "jabernardo/saddle": "^0.1.0"
+        "jabernardo/calf": "dev-master"
     }
 }

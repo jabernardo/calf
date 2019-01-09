@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.0",
-        "jabernardo/saddle": "dev-master"
+        "jabernardo/saddle": "^0.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0"

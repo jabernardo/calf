@@ -68,9 +68,16 @@ class Request
      * 
      */
     public function __construct() {
-        // Also support PUT and DELETE
+        $inputs = file_get_contents("php://input");
+        $json_decoded = json_decode($inputs, true);
         $_php_request = [];
-        parse_str(file_get_contents("php://input"), $_php_request);
+
+        if (is_null($json_decoded)) {
+            // Fallback for URL encoded parameters
+            parse_str($inputs, $_php_request);
+        } else {
+            $_php_request = $json_decoded; 
+        }
 
         // Merge with POST and GET
         $this->_requests = array_merge($this->_requests, array_merge($_POST, $_php_request));

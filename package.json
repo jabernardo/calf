@@ -1,0 +1,21 @@
+{
+	"name": "calf",
+	"version": "1.0.0",
+	"description": "Calf Webpage",
+	"main": "index.html",
+	"homepage": "https://jabernardo.github.io/calf",
+	"scripts": {
+		"predeploy": "npm run build",
+		"deploy": "gh-pages -d build",
+		"start": "parcel index.html --open",
+		"build": "parcel build index.html --out-dir build --public-url 'https://jabernardo.github.io/calf'"
+	},
+	"dependencies": {
+		"gh-pages": "2.1.1"
+	},
+	"devDependencies": {
+		"@babel/core": "7.2.0",
+		"parcel-bundler": "^1.6.1"
+	},
+	"keywords": []
+}

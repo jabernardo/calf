@@ -1,0 +1,79 @@
+.wrapper {
+    margin-top: 4rem;
+}
+
+.wrapper.container {
+    color: #4d4d4d;
+}
+
+.wrapper.container a, .wrapper.container a:visited {
+    font-weight: 500;
+    text-decoration: none;
+    color: #61659a;
+}
+
+.wrapper.container a:hover {
+    color: #ffffff;
+    background-color: #515696;
+}
+
+.wrapper.container .quote {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.5em;
+    color: #515696;
+}
+
+.wrapper.container header {
+    text-align: center;
+}
+
+.wrapper.container h2 {
+    color: #61659a;
+    margin-top: 1.5em;
+    border-bottom: 1px solid #61659a;
+}
+
+.wrapper.container .logo {
+    width: 256px;
+    height: 256px;
+}
+
+.wrapper.container .nav-bar {
+    border-top: #e3e3e3 solid 1px;
+    border-bottom: #e3e3e3 solid 1px;
+    list-style: none;
+}
+
+.wrapper.container .nav-bar .nav-item {
+    display: inline-block;
+    margin: 18px 20px 18px 4px;
+}
+
+.wrapper.container code {
+    border: none;
+}
+
+.wrapper.container pre[class*="language-"] {
+    background: #fff !important;
+    padding: 0px !important;
+    border: #e3e3e3 solid 1px;
+    line-height: auto !important;
+}
+
+.wrapper.container blockquote {
+    padding-left: 1rem;
+    color: #6a737d;
+    line-height: 3rem;
+    border-left: solid 3px #6a737d;
+}
+
+.wrapper.container footer {
+    border-top: #e3e3e3 solid 1px;
+    margin-top: 3em;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+
+/*# sourceMappingURL=/calf.f98a9b55.css.map */

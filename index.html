@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Calf: Yet another Micro-framework for PHP</title>
+        <link rel="icon" type="image/x-icon" href="./src/assets/calf.ico" />
+        <link rel="shortcut icon" type="image/x-icon" href="./src/assets/calf.ico" />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="author" content="John Aldrich Bernardo" />
+        <meta name="description" content="The Calf is yet another Micro-framework for PHP. This project was originally named minion-router and started as a self-project for fun. The Calf is just a dispatcher for HTTP Request that throws specified response. Basically ideal for creating APIs." />
+        <meta name="keywords" content="calf, php, php7, micro-framework, php-micro-framework, php-router" />
+        <!-- OGP --> 
+        <meta property="og:title" content="Calf: Yet another Micro-framework for PHP." />
+        <meta property="og:author" content="John Aldrich Bernardo" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://jabernardo.github.io/calf" />
+        <meta property="og:description" content="The Calf is yet another Micro-framework for PHP. This project was originally named minion-router and started as a self-project for fun. The Calf is just a dispatcher for HTTP Request that throws specified response. Basically ideal for creating APIs." />
+        <meta property="og:image" content="./src/assets/calf-mini.png" />
+				<meta property="og:image_secure" content="./src/assets/calf-mini.png" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="256" />
+        <meta property="og:image:height" content="256" />
+        <!-- End of OGP --> 
+        <!-- Styles -->
+        <link rel="stylesheet" href="./src/assets/normalize.css">
+        <link rel="stylesheet" href="./src/assets/skeleton.css">
+        <link rel="stylesheet" href="./src/assets/prism.css">
+        <link rel="stylesheet" href="./src/assets/calf.css">
+        <!-- End of Styles -->
+        <!-- Google Analytics -->
+        <!-- Global Site Tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-105779805-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments)};
+            gtag('js', new Date());
+
+            gtag('config', 'UA-105779805-1');
+        </script>
+        <!-- End if Google Analytics -->
+    </head>
+    <body>
+        <div class="wrapper container">
+            <header>
+                <img class="logo" src="./src/assets/calf-mini.png">
+                <h1>Calf</h1>
+                <label class="quote">"Yet another Micro-framework for PHP."</label>
+            </header>
+            
+            <ul class="nav-bar">
+                <li class="nav-item">
+                    <a href="https://github.com/jabernardo/calf">Github</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://github.com/jabernardo/calf/wiki">Wiki</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://github.com/jabernardo/calf/fork">Fork</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://github.com/jabernardo/calf/archive/master.tar.gz">Download</a>
+                </li>
+            </ul>
+            
+            <h2>Introduction</h2>
+            <p>The Calf is yet another Micro-framework for PHP. 
+            This project was originally named minion-router and started as a self-project for fun. 
+            The Calf is just a dispatcher for HTTP Request that throws specified response. 
+            Basically ideal for creating APIs.</p>
+            
+            <b>Calf is so easy!!!</b>
+            
+            <pre>
+                <code class="language-php">
+&#x3C;?php
+
+require(&#x22;vendor/autoload.php&#x22;);
+
+$app = new \Calf\App();
+
+$home = new \Calf\HTTP\Route(&#x27;/&#x27;, function($req, $res) {
+        return $res-&#x3E;write(&#x27;Hello World!&#x27;);
+    });
+
+$app-&#x3E;add($home);
+
+$app-&#x3E;run();
+                </code>
+            </pre>
+            
+            <h2>Installation</h2>
+            Calf can be easily installed using `composer`
+            <blockquote>
+                What's composer?
+                Composer is a dependency manager for PHP. Click <a href="https://getcomposer.org/">here</a> for more information about composer.
+            </blockquote>
+            <pre>
+                <code class="language-bash">
+composer require jabernardo/calf
+                </code>
+            </pre>
+            
+            <footer>
+                <a class="github-button" href="https://github.com/jabernardo/calf" data-size="large" data-show-count="true" aria-label="Star jabernardo/calf on GitHub">Star</a>
+                <a class="github-button" href="https://github.com/jabernardo/calf/fork" data-size="large" data-show-count="true" aria-label="Fork jabernardo/calf on GitHub">Fork</a>
+                <p>The calf is open-sourced software licensed under the <a href="http://opensource.org/licenses/MIT">MIT</a> license. Copyright &copy; John Aldrich Bernardo.
+            </footer>
+        </div>
+        <script type="text/javascript" src="./src/assets/prism.js"></script>
+        <script async defer src="https://buttons.github.io/buttons.js"></script>
+    </body>
+</html>

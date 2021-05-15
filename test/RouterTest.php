@@ -26,12 +26,12 @@ class RouterTest extends \PHPUnit\Framework\TestCase
 {
     private $requestTimeFloat;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->requestTimeFloat = $_SERVER['REQUEST_TIME_FLOAT'];
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $_SERVER['REQUEST_TIME_FLOAT'] = $this->requestTimeFloat;
     }

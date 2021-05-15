@@ -35,13 +35,17 @@ class DeferredCallable
      * @param   mixed       $container  Callback DI
      * @throws  \Calf\Exception\InvalidArgument     Invalid callable
      */
-    public function __construct($callable, $container = null)
+    public function __construct(callable $callable, $container = null)
     {
-        if (!is_object($callable) && !($callable instanceof \Closure)) {
+        if (!is_callable($callable)) {
             throw new \Calf\Exception\InvalidArgument('Invalid callable.');
         }
 
-        $this->_callable = $callable;
+        if (!is_object($callable) && !($callable instanceof \Closure)) {
+            $this->_callable = function(...$params) use($callable) { return call_user_func_array($callable, $params); };
+        } else {
+            $this->_callable = $callable;
+        }
         $this->_container = $container;
     }
 

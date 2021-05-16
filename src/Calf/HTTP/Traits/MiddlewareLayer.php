@@ -58,6 +58,8 @@ trait MiddlewareLayer
             // Return the new result
             return $res;
         };
+
+        return $this;
     }
     
     /**

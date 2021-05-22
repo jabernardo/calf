@@ -26,6 +26,13 @@ class RouteGroup
     private $_group = [];
 
     /**
+     * @var     array   Middlewares
+     * @access  private
+     * 
+     */
+    private $_middlewares = [];
+
+    /**
      * Class construct
      * 
      * @access  public
@@ -53,7 +60,24 @@ class RouteGroup
         $old_path = trim($route->getPath(), '/');
         $route->setPath($this->_name . '/' . $old_path);
 
+        foreach ($this->_middlewares as $middleware) {
+            $route->addMiddleware($middleware);
+        }
+
         $this->_group[] = $route;
+    }
+
+    /**
+     * Allow middleware
+     * 
+     * @access  public
+     * @param   \Calf\HTTP\Interfaces\Middleware @middleware    New Middleware entry
+     * @return  \Calf\HTTP\RouteGroup
+     */
+    public function addMiddleware(\Calf\HTTP\Interfaces\Middleware $middleware) {
+        $this->_middlewares[] = $middleware;
+
+        return $this;
     }
 
     /**

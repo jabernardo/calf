@@ -206,6 +206,22 @@ class Response
     public function getHeaders() {
         return $this->_headers;
     }
+
+
+    /**
+     * Get header
+     * 
+     * @access public
+     * @return any
+     */
+    public function getHeader($key) {
+        foreach ($this->_headers as $header) {
+            $matches = [];
+            preg_match("/^{$key}:(.*)/i", $header, $matches);
+
+            if ($matches) return trim($matches[1]);
+        }
+    }
     
     /**
      * Get cookies for response

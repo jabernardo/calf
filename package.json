@@ -8,7 +8,7 @@
 		"predeploy": "npm run build",
 		"deploy": "gh-pages -d build",
 		"start": "parcel index.html --open",
-		"build": "parcel build index.html --out-dir build --public-url 'https://jabernardo.github.io/calf'"
+		"build": "parcel build index.html --out-dir build --public-url 'https://jabernardo.com/calf'"
 	},
 	"dependencies": {
 		"gh-pages": "2.1.1"
